@@ -151,7 +151,7 @@ footer{text-align:center;color:var(--muted);font-size:14px;padding:10px 20px 40p
       <figure><img src="img/09-szukaj-gemini.png" alt="Wyszukiwanie modelu Gemini" loading="lazy"></figure></li>
     <li>W polu <b>Credential</b> wybierz <b>Create new credential</b>. Pole <b>Host</b> zostaw bez zmian, w pole <b>API Key</b> wklej klucz z AI Studio i kliknij <b>Save</b>.
       <figure><img src="img/10-klucz-gemini.png" alt="Formularz dodawania klucza Gemini" loading="lazy"></figure></li>
-    <li>Z listy <b>Model</b> wybierz najnowszy model z <b>Flash</b> lub <b>Flash-Lite</b> w nazwie. Mają najwyższe darmowe limity. Modeli Pro unikaj.
+    <li>Z listy <b>Model</b> wybierz <code>models/gemini-3.5-flash-lite</code> (albo nowszy model z <b>Flash-Lite</b> lub <b>Flash</b> w nazwie). Mają najwyższe darmowe limity. Modeli Pro unikaj. Starsze modele, np. Gemini 2.5, mogą jeszcze być na liście, ale dla nowych kont zwracają błąd 404.
       <figure><img src="img/11-model-gemini.png" alt="Wybór modelu Gemini" loading="lazy"><figcaption>Na zrzucie pole jest czerwone, bo został użyty przykładowy klucz. Z prawdziwym kluczem zobaczysz listę modeli do wyboru.</figcaption></figure></li>
     <li>Zamknij panel modelu.</li>
   </ol>
@@ -278,12 +278,13 @@ Korzystaj wyłącznie z treści abstraktów. Jeśli jakiejś informacji nie ma w
   <h2>11. Plan B i typowe problemy</h2>
   <div class="meta">gdy coś nie działa</div>
   <h3>Gotowy agent do zaimportowania</h3>
-  <p>Pobierz plik <a href="agent-arxiv-n8n.json" download>agent-arxiv-n8n.json</a>. W n8n utwórz pusty przepływ, kliknij <b>…</b> obok nazwy przepływu, wybierz <b>Import</b>, a potem <b>From File</b>. Po imporcie otwórz węzeł modelu, wybierz swój klucz Gemini (Credential) i model Flash.</p>
+  <p>Pobierz plik <a href="agent-arxiv-n8n.json" download>agent-arxiv-n8n.json</a>. W n8n utwórz pusty przepływ, kliknij <b>…</b> obok nazwy przepływu, wybierz <b>Import</b>, a potem <b>From File</b>. Po imporcie otwórz węzeł modelu, wybierz swój klucz Gemini (Credential) i sprawdź, czy w polu Model jest <code>models/gemini-3.5-flash-lite</code>.</p>
   <figure><img src="img/21-import.png" alt="Menu przepływu z opcją Import" loading="lazy"></figure>
   <h3>Problemy i rozwiązania</h3>
   <table>
     <tr><th>Problem</th><th>Przyczyna</th><th>Co zrobić</th></tr>
     <tr><td>Błąd 429 albo „Resource exhausted”</td><td>Wyczerpany darmowy limit Gemini</td><td>Odczekaj minutę; przełącz na Flash-Lite; użyj klucza z innego konta Google</td></tr>
+    <tr><td>Błąd 404 „This model … is no longer available to new users”</td><td>Wybrany model został wycofany</td><td>W węźle modelu wybierz model wskazany w komunikacie błędu, np. <code>models/gemini-3.5-flash-lite</code></td></tr>
     <tr><td>Błąd uwierzytelnienia modelu</td><td>Źle wklejony klucz</td><td>Utwórz credential od nowa, sprawdź, czy klucz nie ma spacji na końcu</td></tr>
     <tr><td>Agent nie używa narzędzia</td><td>Słaby opis narzędzia albo brak reguły w instrukcji</td><td>Doprecyzuj Description; dodaj regułę „zawsze użyj narzędzia”</td></tr>
     <tr><td>arXiv zwraca błąd 503 albo nic</td><td>Za dużo zapytań z jednej sieci naraz</td><td>Odczekaj kilka sekund i powtórz</td></tr>
