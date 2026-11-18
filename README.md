@@ -8,7 +8,7 @@ Kurs: https://patthub.github.io/ibi_n8n/ (po włączeniu GitHub Pages)
 
 | Ścieżka | Co to jest |
 | --- | --- |
-| `index.html` | Kurs: 12 rozdziałów, zrzuty ekranu, postęp, quizy, przyciski kopiowania |
+| `index.html` | Kurs: 11 rozdziałów, zrzuty ekranu, postęp, quizy, przyciski kopiowania |
 | `img/` | Zrzuty ekranu z n8n 2.48 (czerwone ramki = gdzie kliknąć) |
 | `agent-arxiv-n8n.json` | Gotowy przepływ do zaimportowania w n8n (plan B dla studentów) |
 | `materialy/przewodnik-prowadzacego.md` | Przewodnik dla prowadzącego: plan zajęć 90 min, prompty, testy, problemy |
