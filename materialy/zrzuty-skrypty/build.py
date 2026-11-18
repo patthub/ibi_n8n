@@ -1,0 +1,37 @@
+import sys; sys.path.insert(0,"/home/claude")
+from pw_lib import page
+S="/home/claude/shots/b_"
+def shot(pg,n): pg.wait_for_timeout(1500); pg.screenshot(path=S+n+".png"); print("shot",n)
+def plus(pg, idx):
+    hs=[h for h in pg.locator('[data-test-id="canvas-handle-plus"]').all() if (h.bounding_box() or {"y":0})["y"]>480]
+    hs=sorted(hs, key=lambda h:h.bounding_box()["x"])
+    hs[idx].click(force=True); pg.wait_for_timeout(1500)
+with page("http://127.0.0.1:5678/workflow/new") as pg:
+    pg.mouse.click(740,428); pg.wait_for_timeout(1500)
+    pg.keyboard.type("chat"); pg.wait_for_timeout(800); pg.keyboard.press("Enter"); pg.wait_for_timeout(1000)
+    pg.get_by_text("On new Chat event").first.click(); pg.wait_for_timeout(1500); pg.keyboard.press("Escape"); pg.wait_for_timeout(1000)
+    pg.mouse.click(852,441); pg.wait_for_timeout(1500); pg.keyboard.type("agent"); pg.wait_for_timeout(1000)
+    pg.get_by_text("AI Agent", exact=True).first.click(); pg.wait_for_timeout(1500); pg.keyboard.press("Escape"); pg.wait_for_timeout(1000)
+    # model
+    plus(pg,0); pg.keyboard.type("gemini"); shot(pg,"09_search_gemini")
+    pg.get_by_text("Google Gemini Chat Model", exact=True).first.click(); pg.wait_for_timeout(1500)
+    pg.locator('[data-test-id="node-credentials-select"]').first.click(); shot(pg,"10_cred_dropdown")
+    pg.get_by_text("Create new credential").first.click(); shot(pg,"10b_cred_modal")
+    print(pg.inner_text("body")[-500:])
+    pg.keyboard.press("Escape"); pg.wait_for_timeout(800); pg.mouse.click(1394,45); pg.wait_for_timeout(800)
+    pg.keyboard.press("Escape"); pg.wait_for_timeout(1000)
+    plus(pg,0); shot(pg,"11a_memory_picker")
+    pg.get_by_text("Simple Memory", exact=True).first.click(); shot(pg,"11_memory_panel")
+    pg.mouse.click(1394,45); pg.wait_for_timeout(1000); shot(pg,"11b_canvas")
+    pg.mouse.click(1394,45); pg.wait_for_timeout(800); plus(pg,0); shot(pg,"12_tool_picker")
+    pg.get_by_text("HTTP Request Tool", exact=True).first.click(); shot(pg,"13_http_panel")
+    pg.mouse.click(1394,45); pg.wait_for_timeout(1000); shot(pg,"14_canvas_full")
+    n = pg.locator('[data-test-id="canvas-node"][data-node-name="AI Agent"]'); bb=n.bounding_box()
+    pg.mouse.dblclick(bb["x"]+bb["width"]/2, bb["y"]+bb["height"]/2); pg.wait_for_timeout(2000)
+    shot(pg,"15a_agent"); pg.mouse.click(728,469); shot(pg,"15_agent_add_option")
+    pg.keyboard.press("Escape"); pg.wait_for_timeout(500); pg.mouse.click(1394,45); pg.wait_for_timeout(1000)
+    pg.locator('[data-test-id="workflow-menu"]').first.click(); shot(pg,"16_menu")
+    print(pg.inner_text("body")[:300])
+    pg.keyboard.press("Escape"); pg.wait_for_timeout(500)
+    pg.get_by_text("Open chat").last.click(); shot(pg,"17_chat")
+    pg.context.storage_state(path="/home/claude/state.json")

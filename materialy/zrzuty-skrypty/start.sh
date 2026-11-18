@@ -1,0 +1,3 @@
+export PATH=/opt/node24/bin:$PATH N8N_USER_FOLDER=/home/claude/n8n/data N8N_DIAGNOSTICS_ENABLED=false N8N_PERSONALIZATION_ENABLED=false N8N_SECURE_COOKIE=false N8N_DEFAULT_LOCALE=en N8N_HIDE_USAGE_PAGE=true
+export N8N_LISTEN_ADDRESS=0.0.0.0 N8N_HOST=localhost
+exec npx n8n start
