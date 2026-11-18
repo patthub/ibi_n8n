@@ -240,14 +240,44 @@ Zasady:
 <section id="s9" data-title="Ekstrakcja z abstraktów">
   <h2>9. Ekstrakcja informacji z abstraktów</h2>
   <div class="meta">15 minut</div>
-  <p>Zadanie przypomina rozpoznawanie encji (NER) i analizę sentymentu z poprzednich zajęć, ale tym razem wykonuje je model językowy na abstraktach pobranych z arXiv. Wpisz w czacie (zmień temat na swój):</p>
+  <p>Zadanie przypomina rozpoznawanie encji (NER) i analizę sentymentu z poprzednich zajęć, ale tym razem wykonuje je model językowy na abstraktach pobranych z arXiv. Wypróbuj poniższe prompty na temacie swojej pracy licencjackiej: w miejsce <code>[TEMAT]</code> wpisz swój temat.</p>
+  <div class="tip"><b>Jeśli agent nic nie znajduje</b>arXiv obejmuje głównie nauki ścisłe i informatykę. Gdy temat jest bardzo wąski albo humanistyczny, opisz go ogólniej, np. „czytelnictwo młodzieży” zamiast „czytelnictwo młodzieży w bibliotekach Mazowsza”.</div>
+
+  <h3>Tabela przeglądu literatury</h3>
 <pre><code>Znajdź 5 artykułów na temat: [TEMAT].
 Dla każdego wypełnij tabelę w formacie markdown z kolumnami:
 Tytuł | Rok | Problem badawczy | Metoda | Dane / zbiór danych | Główny wynik | Nastawienie autorów (entuzjastyczne / neutralne / krytyczne) | Fragment abstraktu uzasadniający nastawienie
 Korzystaj wyłącznie z treści abstraktów. Jeśli jakiejś informacji nie ma w abstrakcie, wpisz „brak w abstrakcie”.</code></pre>
-  <p>Skopiuj tabelę do Excela lub Arkuszy Google.</p>
-  <div class="task"><b>Do dyskusji</b>Czy „Metoda” i „Dane” to encje w sensie NER? Czym różni się ocena nastawienia przez LLM od klasyfikatora sentymentu z poprzednich zajęć? Które podejście łatwiej sprawdzić i powtórzyć?</div>
-  <div class="tip"><b>Dla chętnych</b>Przenieś format tabeli do instrukcji systemowej, żeby agent zawsze zwracał wyniki w tej postaci.</div>
+  <p>Tabelę możesz skopiować do Excela lub Arkuszy Google.</p>
+
+  <h3>Różne zapytania do bazy</h3>
+<pre><code>Moja praca licencjacka dotyczy tematu: [TEMAT].
+Ułóż 3 różne zapytania do arXiv: szerokie, wąskie i ujmujące temat z innej strony. Wykonaj każde z nich.
+Dla każdego zapytania podaj jego treść, liczbę trafnych wyników i jeden najlepszy artykuł.</code></pre>
+
+  <h3>Metody badawcze</h3>
+<pre><code>Znajdź 5 artykułów na temat: [TEMAT].
+Pogrupuj je według metody badawczej (np. ankieta, analiza bibliometryczna, eksperyment, studium przypadku, analiza tekstu).
+Dla każdej grupy podaj tytuły i jednym zdaniem opisz, co łączy te prace.</code></pre>
+
+  <h3>Źródła danych</h3>
+<pre><code>Znajdź 5 artykułów na temat: [TEMAT], w których autorzy analizują dane.
+Wypisz, z jakich źródeł danych korzystali (np. Scopus, Web of Science, OpenAlex, ankiety, media społecznościowe) i jak duży był zbiór danych.
+Jeśli abstrakt tego nie podaje, napisz „brak w abstrakcie”.</code></pre>
+
+  <h3>Definicje pojęć</h3>
+<pre><code>Znajdź artykuły na temat: [TEMAT].
+Wypisz, jak autorzy rozumieją lub definiują pojęcie [POJĘCIE]. Przy każdej definicji zacytuj fragment abstraktu i podaj tytuł artykułu.</code></pre>
+
+  <h3>Ograniczenia i luki</h3>
+<pre><code>Znajdź 5 artykułów na temat: [TEMAT].
+Na podstawie abstraktów wypisz ograniczenia, które wskazują sami autorzy, oraz pytania, których nie badali.
+Przy każdym punkcie podaj, z którego artykułu pochodzi. Nie dopisuj niczego, czego nie ma w abstraktach.</code></pre>
+
+  <h3>Stanowiska autorów</h3>
+<pre><code>Znajdź artykuły na temat: [TEMAT].
+Podziel je na trzy grupy: autorzy oceniający zjawisko pozytywnie, neutralnie i krytycznie.
+Przy każdym artykule podaj fragment abstraktu, na podstawie którego go przypisałeś.</code></pre>
 </section>
 
 <section id="s10" data-title="Łamanie agenta">
