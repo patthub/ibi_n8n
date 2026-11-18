@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Własny agent AI w n8n — kurs krok po kroku</title>
+<title>Własny agent AI w n8n</title>
 <style>
 :root{--ink:#1d1d1f;--muted:#5f6368;--line:#e4e4e7;--bg:#fafaf9;--card:#fff;--acc:#e6285a;--acc2:#ffe8ee;--ok:#1a7f4b;--code:#f4f4f5}
 *{box-sizing:border-box}
@@ -62,7 +62,7 @@ footer{text-align:center;color:var(--muted);font-size:14px;padding:10px 20px 40p
 <body>
 <header><div class="wrap">
   <h1>Własny agent AI w n8n</h1>
-  <p>Kurs krok po kroku: budujemy agenta, który wyszukuje artykuły naukowe w arXiv i porządkuje je w tabeli przeglądu literatury. Bez programowania, w przeglądarce, za darmo.</p>
+  <p>Budujemy agenta, który wyszukuje artykuły naukowe w arXiv i zestawia je w tabeli do przeglądu literatury. Wszystko robimy w przeglądarce, bez programowania i bez opłat.</p>
   <div class="progress"><div id="pbar"></div></div>
   <div id="ptext"></div>
 </div></header>
@@ -74,7 +74,7 @@ footer{text-align:center;color:var(--muted);font-size:14px;padding:10px 20px 40p
 <section id="s0" data-title="O kursie">
   <h2>O kursie</h2>
   <div class="meta">ok. 90 minut · nic nie instalujesz</div>
-  <p>Zbudujesz agenta AI, czyli program, który sam decyduje, kiedy sięgnąć po narzędzie (u nas: wyszukiwarkę arXiv), korzysta z niego i dopiero wtedy odpowiada. Na koniec agent będzie wyszukiwał prawdziwe artykuły i wyciągał z abstraktów problem badawczy, metodę, dane, wyniki i nastawienie autorów.</p>
+  <p>Agent AI to program, który sam decyduje, kiedy użyć narzędzia (u nas wyszukiwarki arXiv), i odpowiada na podstawie jego wyników. Twój agent będzie wyszukiwał artykuły i wypisywał z abstraktów problem badawczy, metodę, dane, wyniki i nastawienie autorów.</p>
   <p><b>Potrzebujesz:</b> przeglądarki, adresu e-mail (konto n8n) i konta Google (klucz do modelu Gemini).</p>
   <div class="tip"><b>Zrzuty ekranu</b>pochodzą z n8n w wersji 2.48. W n8n Cloud układ może się minimalnie różnić, ale nazwy przycisków są te same. Kliknij zrzut, żeby go powiększyć. Czerwone ramki pokazują, gdzie kliknąć.</div>
   <div class="tip"><b>Postęp</b>Po każdym rozdziale kliknij „Zrobione”. Postęp zapisuje się w Twojej przeglądarce.</div>
@@ -83,14 +83,14 @@ footer{text-align:center;color:var(--muted);font-size:14px;padding:10px 20px 40p
 <section id="s1" data-title="Czym jest agent">
   <h2>1. Czym jest agent</h2>
   <div class="meta">5 minut · teoria</div>
-  <p>Zwykły czat tylko generuje tekst z pamięci modelu. Agent może sięgnąć po prawdziwe dane. Agent w n8n składa się z pięciu elementów:</p>
+  <p>Zwykły czat odpowiada na podstawie tego, czego model nauczył się podczas treningu. Agent może dodatkowo pobrać dane z zewnętrznego źródła. Agent w n8n składa się z pięciu elementów:</p>
   <table>
     <tr><th>Element</th><th>Rola</th><th>U nas</th></tr>
     <tr><td>Wyzwalacz (trigger)</td><td>Uruchamia agenta</td><td>Okno czatu</td></tr>
     <tr><td>Węzeł AI Agent</td><td>Prowadzi pętlę decyzyjną</td><td>AI Agent</td></tr>
-    <tr><td>Model językowy</td><td>„Mózg”: rozumie i decyduje</td><td>Gemini Flash (darmowy klucz)</td></tr>
+    <tr><td>Model językowy</td><td>Interpretuje pytanie i wybiera kolejny krok</td><td>Gemini Flash (darmowy klucz)</td></tr>
     <tr><td>Pamięć</td><td>Pamięta kilka ostatnich wiadomości</td><td>Simple Memory</td></tr>
-    <tr><td>Narzędzia</td><td>„Ręce”: działają w świecie</td><td>Wyszukiwarka arXiv</td></tr>
+    <tr><td>Narzędzia</td><td>Pobierają dane z zewnętrznych źródeł</td><td>Wyszukiwarka arXiv</td></tr>
   </table>
   <p>Agent działa w pętli <b>ReAct</b> (reason + act): <b>rozumuje</b> („użytkownik pyta o najnowsze prace, muszę poszukać”), <b>działa</b> (wywołuje narzędzie z zapytaniem, które sam ułożył), <b>obserwuje</b> wynik i decyduje, czy szukać dalej, czy już odpowiedzieć.</p>
   <div class="warn"><b>Limity</b>Każdy krok pętli to osobne zapytanie do Gemini. Jedno pytanie do agenta z jednym wyszukiwaniem zużywa zwykle 2–3 zapytania z darmowego limitu.</div>
@@ -169,19 +169,19 @@ footer{text-align:center;color:var(--muted);font-size:14px;padding:10px 20px 40p
     <li>Napisz do agenta:
 <pre><code>Podaj 5 najnowszych artykułów naukowych o altmetrii, z linkami.</code></pre></li>
   </ol>
-  <div class="task"><b>Zadanie</b>Kliknij 2–3 linki z odpowiedzi. Czy artykuły istnieją? Czy są naprawdę najnowsze? Model bez narzędzi odpowiada z pamięci treningowej: część tytułów bywa nieaktualna, część zmyślona, a linki często prowadzą donikąd. Dlatego w następnym kroku dajemy agentowi wyszukiwarkę.</div>
+  <div class="task"><b>Zadanie</b>Kliknij 2–3 linki z odpowiedzi. Czy artykuły istnieją? Czy są naprawdę najnowsze? Model bez narzędzi odpowiada z pamięci treningowej: część tytułów bywa nieaktualna, część zmyślona, a linki często prowadzą donikąd. W następnym rozdziale podłączymy wyszukiwarkę.</div>
 </section>
 
 <section id="s7" data-title="Narzędzie arXiv">
   <h2>7. Narzędzie: wyszukiwarka arXiv</h2>
-  <div class="meta">20 minut · najważniejszy rozdział</div>
+  <div class="meta">20 minut</div>
   <p>API arXiv jest darmowe i nie wymaga klucza. Ma też kategorię <b>cs.DL (Digital Libraries)</b> z pracami z bibliometrii, naukometrii i altmetrii.</p>
   <ol class="steps">
     <li>Kliknij <b>+</b> pod gniazdem <b>Tool</b> i wybierz <b>HTTP Request Tool</b>.
       <figure><img src="img/15-narzedzia-lista.png" alt="Lista narzędzi z HTTP Request Tool" loading="lazy"></figure>
       <figure><img src="img/16-http-pusty.png" alt="Pusty panel HTTP Request" loading="lazy"><figcaption>Pusty panel narzędzia. Wypełnimy go w kolejnych krokach.</figcaption></figure></li>
     <li><b>Nazwa.</b> Kliknij nazwę węzła u góry panelu (<i>HTTP Request</i>) i zmień ją na <code>szukaj_w_arxiv</code>. Agent widzi tę nazwę.</li>
-    <li><b>Opis.</b> Zastąp tekst w polu <b>Description</b> poniższym. To najważniejsze pole: na jego podstawie model decyduje, kiedy i jak użyć narzędzia.
+    <li><b>Opis.</b> Zastąp tekst w polu <b>Description</b> poniższym. Na podstawie tego opisu model decyduje, kiedy i jak użyć narzędzia.
 <pre><code>Wyszukuje artykuły naukowe w bazie arXiv. Zwraca do 5 wyników w formacie XML: tytuł, autorzy, data, abstrakt i link.
 Używaj zawsze, gdy użytkownik pyta o publikacje, literaturę lub badania na jakiś temat.
 Parametr search_query to zapytanie po angielsku w składni arXiv, np.:
@@ -200,7 +200,7 @@ Parametr search_query to zapytanie po angielsku w składni arXiv, np.:
       </table></li>
     <li><b>Pole wypełniane przez agenta.</b> Przy polu <b>Value</b> parametru <code>search_query</code> kliknij ikonę gwiazdek po prawej (<i>Let the model define this parameter</i>). Jeśli jej nie widzisz, wklej w pole wyrażenie:
 <pre><code>{{ $fromAI('search_query', 'Zapytanie w składni arXiv, po angielsku', 'string') }}</code></pre>
-      To kluczowy moment: od teraz agent sam układa zapytanie do bazy.
+      Dzięki temu agent sam układa zapytanie do arXiv.
       <figure><img src="img/17-http-wypelniony.png" alt="Wypełniony panel narzędzia arXiv" loading="lazy"><figcaption>Tak wygląda gotowe narzędzie. Ramki: opis narzędzia i ikona „niech model wypełni to pole”.</figcaption></figure></li>
     <li>Zamknij panel i zapisz. Gotowy agent wygląda tak:
       <figure><img src="img/18-gotowy-agent.png" alt="Gotowy agent z modelem, pamięcią i narzędziem" loading="lazy"></figure></li>
@@ -238,16 +238,16 @@ Zasady:
 </section>
 
 <section id="s9" data-title="Ekstrakcja z abstraktów">
-  <h2>9. Agent robi NLP: ekstrakcja z abstraktów</h2>
+  <h2>9. Ekstrakcja informacji z abstraktów</h2>
   <div class="meta">15 minut</div>
-  <p>To ten sam typ zadania co rozpoznawanie encji (NER) i analiza sentymentu z poprzednich zajęć. Tym razem wykonuje je model językowy w ramach agenta, na abstraktach pobranych z arXiv. Wpisz w czacie (zmień temat na swój):</p>
+  <p>Zadanie przypomina rozpoznawanie encji (NER) i analizę sentymentu z poprzednich zajęć, ale tym razem wykonuje je model językowy na abstraktach pobranych z arXiv. Wpisz w czacie (zmień temat na swój):</p>
 <pre><code>Znajdź 5 artykułów na temat: [TEMAT].
 Dla każdego wypełnij tabelę w formacie markdown z kolumnami:
 Tytuł | Rok | Problem badawczy | Metoda | Dane / zbiór danych | Główny wynik | Nastawienie autorów (entuzjastyczne / neutralne / krytyczne) | Fragment abstraktu uzasadniający nastawienie
 Korzystaj wyłącznie z treści abstraktów. Jeśli jakiejś informacji nie ma w abstrakcie, wpisz „brak w abstrakcie”.</code></pre>
-  <p>Skopiuj tabelę do Excela lub Arkuszy Google. Tak powstaje zaczątek przeglądu literatury.</p>
+  <p>Skopiuj tabelę do Excela lub Arkuszy Google.</p>
   <div class="task"><b>Do dyskusji</b>Czy „Metoda” i „Dane” to encje w sensie NER? Czym różni się ocena nastawienia przez LLM od klasyfikatora sentymentu z poprzednich zajęć? Które podejście łatwiej sprawdzić i powtórzyć?</div>
-  <div class="tip"><b>Dla chętnych</b>Przenieś format tabeli do instrukcji systemowej, żeby agent zawsze zwracał wyniki w tej postaci. Zwykły czat staje się wtedy wyspecjalizowanym narzędziem.</div>
+  <div class="tip"><b>Dla chętnych</b>Przenieś format tabeli do instrukcji systemowej, żeby agent zawsze zwracał wyniki w tej postaci.</div>
 </section>
 
 <section id="s10" data-title="Łamanie agenta">
@@ -264,7 +264,7 @@ Korzystaj wyłącznie z treści abstraktów. Jeśli jakiejś informacji nie ma w
     <tr><td>Wieloznaczność</td><td>„Artykuły o Pythonie.”</td><td>Jak zinterpretował pytanie i jakie zapytanie wysłał?</td></tr>
     <tr><td>Weryfikacja</td><td>Dowolne wyszukiwanie z tabelą z rozdziału 9</td><td>Kliknij 3 linki: czy artykuł istnieje i czy tabela zgadza się z abstraktem?</td></tr>
   </table>
-  <p>Na koniec policzcie: w ilu procentach testów agent zachował się poprawnie i które testy wypadły najgorzej. To ilościowa ocena narzędzia.</p>
+  <p>Na koniec policzcie, w ilu procentach testów agent zachował się poprawnie i które testy wypadły najgorzej.</p>
   <div class="quiz" data-answer="a">
     <p>Agent podał artykuł, którego nie ma w wynikach narzędzia w panelu Logs. Co to oznacza?</p>
     <label><input type="radio" name="q3" value="a"> Model dopisał go z pamięci lub zmyślił, mimo instrukcji</label>
