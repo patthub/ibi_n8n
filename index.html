@@ -45,11 +45,6 @@ th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-ali
 th{background:var(--bg)}
 .donebtn{margin-top:20px;font:inherit;font-size:15px;padding:9px 18px;border-radius:999px;border:1px solid var(--ok);background:#fff;color:var(--ok);cursor:pointer}
 .donebtn.on{background:var(--ok);color:#fff}
-.quiz{border:1px solid var(--line);border-radius:10px;padding:14px 18px;margin:14px 0}
-.quiz p{margin:0 0 8px;font-weight:600}
-.quiz label{display:block;padding:4px 0;cursor:pointer}
-.quiz .fb{font-size:15px;margin-top:6px;min-height:1.2em}
-.quiz .fb.good{color:var(--ok)}.quiz .fb.bad{color:#c0392b}
 .steps{counter-reset:s;list-style:none;padding:0}
 .steps>li{counter-increment:s;position:relative;padding-left:42px;margin:14px 0}
 .steps>li::before{content:counter(s);position:absolute;left:0;top:0;width:28px;height:28px;border-radius:50%;background:var(--acc);color:#fff;font-weight:700;font-size:14px;display:grid;place-items:center}
@@ -62,7 +57,7 @@ footer{text-align:center;color:var(--muted);font-size:14px;padding:10px 20px 40p
 <body>
 <header><div class="wrap">
   <h1>Własny agent AI w n8n</h1>
-  <p>Budujemy agenta, który wyszukuje artykuły naukowe w arXiv i zestawia je w tabeli do przeglądu literatury. Wszystko robimy w przeglądarce, bez programowania i bez opłat.</p>
+  <p>Instrukcja krok po kroku. Zbudujesz agenta AI, który wyszukuje artykuły naukowe w bazie arXiv i wypisuje informacje z ich streszczeń. Pracujesz tylko w przeglądarce. Nie trzeba umieć programować ani za nic płacić.</p>
   <div class="progress"><div id="pbar"></div></div>
   <div id="ptext"></div>
 </div></header>
@@ -74,43 +69,61 @@ footer{text-align:center;color:var(--muted);font-size:14px;padding:10px 20px 40p
 <section id="s0" data-title="O kursie">
   <h2>O kursie</h2>
   <div class="meta">ok. 90 minut · nic nie instalujesz</div>
-  <p>Agent AI to program, który sam decyduje, kiedy użyć narzędzia (u nas wyszukiwarki arXiv), i odpowiada na podstawie jego wyników. Twój agent będzie wyszukiwał artykuły i wypisywał z abstraktów problem badawczy, metodę, dane, wyniki i nastawienie autorów.</p>
-  <p><b>Potrzebujesz:</b> przeglądarki, adresu e-mail (konto n8n) i konta Google (klucz do modelu Gemini).</p>
-  <div class="tip"><b>Zrzuty ekranu</b>pochodzą z n8n w wersji 2.48. W n8n Cloud układ może się minimalnie różnić, ale nazwy przycisków są te same. Kliknij zrzut, żeby go powiększyć. Czerwone ramki pokazują, gdzie kliknąć.</div>
-  <div class="tip"><b>Postęp</b>Po każdym rozdziale kliknij „Zrobione”. Postęp zapisuje się w Twojej przeglądarce.</div>
+  <p>Po kursie będziesz mieć własnego agenta. Zadajesz mu pytanie, np. o artykuły na temat Twojej pracy licencjackiej. Agent sam wyszukuje je w arXiv i odpowiada na podstawie tego, co znalazł. Umie też wypisać z abstraktów, jaki problem badali autorzy, jaką metodą, na jakich danych i co im wyszło.</p>
+  <p><b>Potrzebujesz:</b></p>
+  <ul>
+    <li>przeglądarki,</li>
+    <li>adresu e-mail (do założenia konta w n8n),</li>
+    <li>konta Google (do klucza Gemini).</li>
+  </ul>
+  <h3>Słowa, które pojawiają się w instrukcji</h3>
+  <table>
+    <tr><th>Słowo</th><th>Co znaczy</th></tr>
+    <tr><td>n8n</td><td>Serwis internetowy do budowania automatów, które łączą różne usługi. Automat układa się z klocków, bez pisania kodu.</td></tr>
+    <tr><td>Przepływ (workflow)</td><td>Jeden automat w n8n. Składa się z klocków połączonych liniami.</td></tr>
+    <tr><td>Węzeł (node)</td><td>Jeden klocek na planszy. Każdy węzeł robi jedną rzecz.</td></tr>
+    <tr><td>Model językowy</td><td>Program, który rozumie i pisze tekst, np. ChatGPT. My używamy Gemini od Google.</td></tr>
+    <tr><td>Klucz API</td><td>Długi ciąg liter i cyfr, który działa jak hasło. Dzięki niemu n8n może korzystać z Gemini na Twoim koncie.</td></tr>
+    <tr><td>arXiv</td><td>Bezpłatne archiwum artykułów naukowych, głównie z informatyki, fizyki i matematyki (<a href="https://arxiv.org" target="_blank" rel="noopener">arxiv.org</a>).</td></tr>
+    <tr><td>Abstrakt</td><td>Streszczenie artykułu naukowego.</td></tr>
+  </table>
+  <div class="tip"><b>Zrzuty ekranu</b>Zrobiono je w n8n w wersji 2.48. U Ciebie niektóre elementy mogą wyglądać trochę inaczej, ale przyciski nazywają się tak samo. Kliknij zrzut, żeby go powiększyć. Czerwona ramka pokazuje, co kliknąć.</div>
+  <div class="tip"><b>Postęp</b>Po każdym rozdziale kliknij „Oznacz jako zrobione”. Postęp zapisuje się w Twojej przeglądarce.</div>
 </section>
 
 <section id="s1" data-title="Czym jest agent">
   <h2>1. Czym jest agent</h2>
   <div class="meta">5 minut · teoria</div>
-  <p>Zwykły czat odpowiada na podstawie tego, czego model nauczył się podczas treningu. Agent może dodatkowo pobrać dane z zewnętrznego źródła. Agent w n8n składa się z pięciu elementów:</p>
+  <p>Zwykły czat z AI odpowiada tylko na podstawie tego, co model zapamiętał podczas uczenia. Niczego nie sprawdza w internecie. Dlatego potrafi podać tytuły artykułów, które nie istnieją.</p>
+  <p>Agent ma dodatkowo <b>narzędzia</b>, np. wyszukiwarkę. Sam decyduje, czy w danej chwili jej potrzebuje, i odpowiada na podstawie tego, co znalazł.</p>
+  <p>Agent w n8n składa się z pięciu części:</p>
   <table>
-    <tr><th>Element</th><th>Rola</th><th>U nas</th></tr>
-    <tr><td>Wyzwalacz (trigger)</td><td>Uruchamia agenta</td><td>Okno czatu</td></tr>
-    <tr><td>Węzeł AI Agent</td><td>Prowadzi pętlę decyzyjną</td><td>AI Agent</td></tr>
-    <tr><td>Model językowy</td><td>Interpretuje pytanie i wybiera kolejny krok</td><td>Gemini Flash (darmowy klucz)</td></tr>
-    <tr><td>Pamięć</td><td>Pamięta kilka ostatnich wiadomości</td><td>Simple Memory</td></tr>
-    <tr><td>Narzędzia</td><td>Pobierają dane z zewnętrznych źródeł</td><td>Wyszukiwarka arXiv</td></tr>
+    <tr><th>Część</th><th>Do czego służy</th><th>W naszym agencie</th></tr>
+    <tr><td>Wyzwalacz (trigger)</td><td>Uruchamia agenta. U nas: gdy wyślesz wiadomość.</td><td>Okno czatu</td></tr>
+    <tr><td>Węzeł AI Agent</td><td>Główny klocek. Łączy pozostałe części w całość.</td><td>AI Agent</td></tr>
+    <tr><td>Model językowy</td><td>Czyta pytanie, decyduje, co zrobić, i pisze odpowiedź.</td><td>Gemini Flash (darmowy klucz)</td></tr>
+    <tr><td>Pamięć</td><td>Zapamiętuje kilka ostatnich wiadomości, żeby można było dopytać.</td><td>Simple Memory</td></tr>
+    <tr><td>Narzędzie</td><td>Pobiera dane spoza modelu.</td><td>Wyszukiwarka arXiv</td></tr>
   </table>
-  <p>Agent działa w pętli <b>ReAct</b> (reason + act): <b>rozumuje</b> („użytkownik pyta o najnowsze prace, muszę poszukać”), <b>działa</b> (wywołuje narzędzie z zapytaniem, które sam ułożył), <b>obserwuje</b> wynik i decyduje, czy szukać dalej, czy już odpowiedzieć.</p>
-  <div class="warn"><b>Limity</b>Każdy krok pętli to osobne zapytanie do Gemini. Jedno pytanie do agenta z jednym wyszukiwaniem zużywa zwykle 2–3 zapytania z darmowego limitu.</div>
-  <div class="quiz" data-answer="b">
-    <p>Co odróżnia agenta od zwykłego czatu z modelem językowym?</p>
-    <label><input type="radio" name="q1" value="a"> Agent używa większego modelu</label>
-    <label><input type="radio" name="q1" value="b"> Agent sam decyduje o użyciu narzędzi i korzysta z ich wyników</label>
-    <label><input type="radio" name="q1" value="c"> Agent odpowiada zawsze po angielsku</label>
-    <div class="fb"></div>
-  </div>
+  <p><b>Jak agent odpowiada na pytanie:</b></p>
+  <ol>
+    <li>Czyta Twoje pytanie.</li>
+    <li>Decyduje, czy musi coś wyszukać. Jeśli tak, sam układa zapytanie do wyszukiwarki.</li>
+    <li>Czyta wyniki.</li>
+    <li>Szuka jeszcze raz albo pisze odpowiedź.</li>
+  </ol>
+  <p>Ten sposób działania nazywa się <b>ReAct</b> (od angielskiego <i>reason + act</i>: przemyśl i zrób).</p>
+  <div class="warn"><b>Limit zapytań</b>Darmowy klucz Gemini pozwala na ograniczoną liczbę zapytań. Każdy krok z listy powyżej to osobne zapytanie do Gemini, więc jedno Twoje pytanie zużywa zwykle 2–3 zapytania z limitu.</div>
 </section>
 
 <section id="s2" data-title="Konta i klucz">
-  <h2>2. Przygotowanie: konta i klucz</h2>
+  <h2>2. Załóż konta i pobierz klucz</h2>
   <div class="meta">10 minut</div>
   <ol class="steps">
-    <li><b>Konto n8n.</b> Wejdź na <a href="https://n8n.io" target="_blank" rel="noopener">n8n.io</a>, zarejestruj się na darmowy okres próbny (14 dni, bez karty) i zaloguj.</li>
-    <li><b>Klucz Gemini.</b> Wejdź na <a href="https://aistudio.google.com" target="_blank" rel="noopener">aistudio.google.com</a>, zaloguj się kontem Google, kliknij <b>Get API key</b>, potem <b>Create API key</b>. Skopiuj klucz i zachowaj go na czas zajęć.</li>
+    <li><b>Konto n8n.</b> Wejdź na <a href="https://n8n.io" target="_blank" rel="noopener">n8n.io</a> i załóż konto. Pierwsze 14 dni jest bezpłatne i nie trzeba podawać karty. Po rejestracji zaloguj się.</li>
+    <li><b>Klucz Gemini.</b> Wejdź na <a href="https://aistudio.google.com" target="_blank" rel="noopener">aistudio.google.com</a> i zaloguj się kontem Google. Kliknij <b>Get API key</b>, a potem <b>Create API key</b>. Skopiuj klucz i wklej go np. do notatnika. Będzie potrzebny w rozdziale 5.</li>
   </ol>
-  <div class="warn"><b>Klucz to hasło</b>Nie wklejaj go do czatu z innymi, do prezentacji ani na wspólny ekran. Każdy używa własnego konta Google: limity liczą się osobno dla każdego projektu.</div>
+  <div class="warn"><b>Traktuj klucz jak hasło</b>Nie wklejaj go na czacie grupy, w prezentacji ani na wspólnym ekranie. Każda osoba tworzy własny klucz na swoim koncie Google. Limit liczy się osobno dla każdego konta, więc jeden klucz dla całej grupy skończyłby się po kilku minutach.</div>
 </section>
 
 <section id="s3" data-title="Wyzwalacz czatu">
@@ -118,15 +131,15 @@ footer{text-align:center;color:var(--muted);font-size:14px;padding:10px 20px 40p
   <div class="meta">5 minut</div>
   <ol class="steps">
     <li>Na stronie głównej n8n kliknij <b>Create workflow</b>.
-      <figure><img src="img/01-start.png" alt="Strona główna n8n z przyciskiem Create workflow" loading="lazy"><figcaption>Przycisk tworzenia nowego przepływu.</figcaption></figure></li>
-    <li>Pojawi się pusta plansza. Kliknij <b>Add first step…</b>
+      <figure><img src="img/01-start.png" alt="Strona główna n8n z przyciskiem Create workflow" loading="lazy"><figcaption>Przycisk, który tworzy nowy przepływ.</figcaption></figure></li>
+    <li>Zobaczysz pustą planszę. Kliknij <b>Add first step…</b>
       <figure><img src="img/02-pusta-plansza.png" alt="Pusta plansza z przyciskiem Add first step" loading="lazy"></figure></li>
-    <li>Wpisz w wyszukiwarkę <code>chat</code> i wybierz <b>Chat</b>.
+    <li>W wyszukiwarkę wpisz <code>chat</code> i wybierz <b>Chat</b>.
       <figure><img src="img/03-szukaj-chat.png" alt="Wyszukiwanie węzła chat" loading="lazy"></figure></li>
-    <li>W sekcji <b>Triggers</b> wybierz <b>On new Chat event</b>.
+    <li>W części <b>Triggers</b> wybierz <b>On new Chat event</b>.
       <figure><img src="img/04-on-chat-event.png" alt="Wybór wyzwalacza On new Chat event" loading="lazy"></figure></li>
-    <li>Otworzy się panel ustawień wyzwalacza. Niczego nie zmieniaj, zamknij go krzyżykiem w prawym górnym rogu. Na planszy jest teraz węzeł <b>When chat message received</b>.
-      <figure><img src="img/05-wyzwalacz.png" alt="Wyzwalacz czatu na planszy" loading="lazy"><figcaption>Plus po prawej stronie węzła służy do dodania kolejnego kroku.</figcaption></figure></li>
+    <li>Otworzy się panel z ustawieniami. Niczego nie zmieniaj. Zamknij go krzyżykiem w prawym górnym rogu. Na planszy jest teraz węzeł <b>When chat message received</b>. To on uruchomi agenta, gdy napiszesz wiadomość.
+      <figure><img src="img/05-wyzwalacz.png" alt="Wyzwalacz czatu na planszy" loading="lazy"><figcaption>Plusem po prawej stronie węzła dodajesz kolejny krok.</figcaption></figure></li>
   </ol>
 </section>
 
@@ -135,24 +148,24 @@ footer{text-align:center;color:var(--muted);font-size:14px;padding:10px 20px 40p
   <div class="meta">5 minut</div>
   <ol class="steps">
     <li>Kliknij <b>+</b> po prawej stronie wyzwalacza i wpisz <code>agent</code>. Wybierz <b>AI Agent</b>.
-      <figure><img src="img/06-szukaj-agent.png" alt="Wyszukiwanie węzła AI Agent" loading="lazy"><figcaption>Uwaga: pierwszy na liście jest „Message an Agent”. To inny węzeł. Wybierz <b>AI Agent</b>.</figcaption></figure></li>
-    <li>Otworzy się panel agenta. Ustawienia domyślne są dobre: agent bierze wiadomość z czatu (<code>{{ $json.chatInput }}</code>). Na dole widać trzy gniazda: <b>Chat Model</b>, <b>Memory</b> i <b>Tool</b>.
+      <figure><img src="img/06-szukaj-agent.png" alt="Wyszukiwanie węzła AI Agent" loading="lazy"><figcaption>Pierwszy na liście jest „Message an Agent”. To inny węzeł. Wybierz <b>AI Agent</b>.</figcaption></figure></li>
+    <li>Otworzy się panel agenta. Niczego nie zmieniaj: agent już teraz dostaje to, co wpiszesz w czacie. Na dole panelu są trzy miejsca, do których podłączysz kolejne części: <b>Chat Model</b> (model), <b>Memory</b> (pamięć) i <b>Tool</b> (narzędzie). W instrukcji nazywamy je gniazdami.
       <figure><img src="img/07-panel-agenta.png" alt="Panel węzła AI Agent" loading="lazy"></figure></li>
-    <li>Zamknij panel. Na planszy agent ma pod spodem trzy gniazda z plusami. <b>Chat Model</b> ma czerwoną gwiazdkę, bo bez modelu agent nie zadziała.
+    <li>Zamknij panel. Pod węzłem agenta widać trzy gniazda z plusami. Przy <b>Chat Model</b> jest czerwona gwiazdka: bez modelu agent nie zadziała.
       <figure><img src="img/08-agent-na-planszy.png" alt="Agent na planszy z gniazdami" loading="lazy"></figure></li>
   </ol>
 </section>
 
 <section id="s5" data-title="Model Gemini">
-  <h2>5. Model językowy: Gemini</h2>
+  <h2>5. Model językowy Gemini</h2>
   <div class="meta">5 minut</div>
   <ol class="steps">
     <li>Kliknij <b>+</b> pod gniazdem <b>Chat Model</b>, wpisz <code>gemini</code> i wybierz <b>Google Gemini Chat Model</b>.
       <figure><img src="img/09-szukaj-gemini.png" alt="Wyszukiwanie modelu Gemini" loading="lazy"></figure></li>
-    <li>W polu <b>Credential</b> wybierz <b>Create new credential</b>. Pole <b>Host</b> zostaw bez zmian, w pole <b>API Key</b> wklej klucz z AI Studio i kliknij <b>Save</b>.
+    <li>Teraz podasz n8n swój klucz. W polu <b>Credential</b> wybierz <b>Create new credential</b>. Pola <b>Host</b> nie zmieniaj. W pole <b>API Key</b> wklej klucz z rozdziału 2 i kliknij <b>Save</b>. n8n zapamięta klucz i nie trzeba go będzie wklejać ponownie.
       <figure><img src="img/10-klucz-gemini.png" alt="Formularz dodawania klucza Gemini" loading="lazy"></figure></li>
-    <li>Z listy <b>Model</b> wybierz <code>models/gemini-3.5-flash-lite</code> (albo nowszy model z <b>Flash-Lite</b> lub <b>Flash</b> w nazwie). Mają najwyższe darmowe limity. Modeli Pro unikaj. Starsze modele, np. Gemini 2.5, mogą jeszcze być na liście, ale dla nowych kont zwracają błąd 404.
-      <figure><img src="img/11-model-gemini.png" alt="Wybór modelu Gemini" loading="lazy"><figcaption>Na zrzucie pole jest czerwone, bo został użyty przykładowy klucz. Z prawdziwym kluczem zobaczysz listę modeli do wyboru.</figcaption></figure></li>
+    <li>Z listy <b>Model</b> wybierz <code>models/gemini-3.5-flash-lite</code>. Jeśli go nie ma, wybierz inny model z <b>Flash-Lite</b> lub <b>Flash</b> w nazwie, bo mają najwyższy darmowy limit. Nie wybieraj modeli Pro. Na liście mogą być też starsze modele, np. Gemini 2.5. Nowe konta ich nie dostaną: zobaczysz błąd 404.
+      <figure><img src="img/11-model-gemini.png" alt="Wybór modelu Gemini" loading="lazy"><figcaption>Pole na zrzucie jest czerwone, bo użyto przykładowego klucza. U Ciebie, z prawdziwym kluczem, pojawi się lista modeli.</figcaption></figure></li>
     <li>Zamknij panel modelu.</li>
   </ol>
 </section>
@@ -161,27 +174,28 @@ footer{text-align:center;color:var(--muted);font-size:14px;padding:10px 20px 40p
   <h2>6. Pamięć i pierwszy test</h2>
   <div class="meta">10 minut</div>
   <ol class="steps">
-    <li>Kliknij <b>+</b> pod gniazdem <b>Memory</b> i wybierz <b>Simple Memory</b>. Ustawień nie zmieniaj, zamknij panel.
+    <li>Kliknij <b>+</b> pod gniazdem <b>Memory</b> i wybierz <b>Simple Memory</b>. Niczego nie zmieniaj, zamknij panel.
       <figure><img src="img/12-pamiec-lista.png" alt="Lista rodzajów pamięci" loading="lazy"></figure>
-      <figure><img src="img/13-agent-model-pamiec.png" alt="Agent z modelem i pamięcią" loading="lazy"><figcaption>Agent ma już model i pamięć. Brakuje mu narzędzi.</figcaption></figure></li>
-    <li>Zapisz przepływ skrótem <b>Ctrl+S</b> (na Macu Cmd+S). Kliknij <b>Open chat</b> na dole ekranu. Po lewej otworzy się okno czatu, po prawej panel <b>Logs</b>.
+      <figure><img src="img/13-agent-model-pamiec.png" alt="Agent z modelem i pamięcią" loading="lazy"><figcaption>Agent ma model i pamięć. Nie ma jeszcze narzędzia.</figcaption></figure></li>
+    <li>Zapisz przepływ: <b>Ctrl+S</b> (na Macu <b>Cmd+S</b>). Kliknij <b>Open chat</b> na dole ekranu. Po lewej otworzy się okno czatu. Po prawej zobaczysz panel <b>Logs</b>, w którym widać, co agent robi krok po kroku.
       <figure><img src="img/14-okno-czatu.png" alt="Otwarte okno czatu i panel logów" loading="lazy"></figure></li>
-    <li>Napisz do agenta:
+    <li>Wyślij agentowi wiadomość:
 <pre><code>Podaj 5 najnowszych artykułów naukowych o altmetrii, z linkami.</code></pre></li>
   </ol>
-  <div class="task"><b>Zadanie</b>Kliknij 2–3 linki z odpowiedzi. Czy artykuły istnieją? Czy są naprawdę najnowsze? Model bez narzędzi odpowiada z pamięci treningowej: część tytułów bywa nieaktualna, część zmyślona, a linki często prowadzą donikąd. W następnym rozdziale podłączymy wyszukiwarkę.</div>
+  <div class="task"><b>Zadanie</b>Kliknij 2–3 linki z odpowiedzi. Czy te artykuły istnieją? Czy naprawdę są najnowsze? Agent nie ma jeszcze wyszukiwarki, więc odpowiada z tego, co model zapamiętał podczas uczenia. Część tytułów może być nieaktualna albo zmyślona, a linki często nie działają. W następnym rozdziale dodasz wyszukiwarkę.</div>
 </section>
 
 <section id="s7" data-title="Narzędzie arXiv">
   <h2>7. Narzędzie: wyszukiwarka arXiv</h2>
   <div class="meta">20 minut</div>
-  <p>API arXiv jest darmowe i nie wymaga klucza. Ma też kategorię <b>cs.DL (Digital Libraries)</b> z pracami z bibliometrii, naukometrii i altmetrii.</p>
+  <p>Teraz dasz agentowi wyszukiwarkę. arXiv pozwala przeszukiwać swoje zbiory za darmo i bez klucza. Ma też osobną kategorię <b>cs.DL (Digital Libraries)</b> z pracami z bibliometrii, naukometrii i altmetrii.</p>
+  <p>Użyjesz węzła <b>HTTP Request Tool</b>. To narzędzie pobiera dane spod adresu internetowego, podobnie jak przeglądarka pobiera stronę.</p>
   <ol class="steps">
     <li>Kliknij <b>+</b> pod gniazdem <b>Tool</b> i wybierz <b>HTTP Request Tool</b>.
       <figure><img src="img/15-narzedzia-lista.png" alt="Lista narzędzi z HTTP Request Tool" loading="lazy"></figure>
-      <figure><img src="img/16-http-pusty.png" alt="Pusty panel HTTP Request" loading="lazy"><figcaption>Pusty panel narzędzia. Wypełnimy go w kolejnych krokach.</figcaption></figure></li>
-    <li><b>Nazwa.</b> Kliknij nazwę węzła u góry panelu (<i>HTTP Request</i>) i zmień ją na <code>szukaj_w_arxiv</code>. Agent widzi tę nazwę.</li>
-    <li><b>Opis.</b> Zastąp tekst w polu <b>Description</b> poniższym. Na podstawie tego opisu model decyduje, kiedy i jak użyć narzędzia.
+      <figure><img src="img/16-http-pusty.png" alt="Pusty panel HTTP Request" loading="lazy"><figcaption>Pusty panel narzędzia. Wypełnisz go w kolejnych krokach.</figcaption></figure></li>
+    <li><b>Nazwa.</b> Kliknij nazwę węzła u góry panelu (<i>HTTP Request</i>) i zmień ją na <code>szukaj_w_arxiv</code>. Model widzi tę nazwę, kiedy wybiera narzędzie.</li>
+    <li><b>Opis.</b> Usuń tekst z pola <b>Description</b> i wklej poniższy. To instrukcja dla modelu: do czego służy narzędzie i jak z niego korzystać. Od tego opisu zależy, czy agent w ogóle użyje wyszukiwarki.
 <pre><code>Wyszukuje artykuły naukowe w bazie arXiv. Zwraca do 5 wyników w formacie XML: tytuł, autorzy, data, abstrakt i link.
 Używaj zawsze, gdy użytkownik pyta o publikacje, literaturę lub badania na jakiś temat.
 Parametr search_query to zapytanie po angielsku w składni arXiv, np.:
@@ -189,42 +203,40 @@ Parametr search_query to zapytanie po angielsku w składni arXiv, np.:
 - all:bibliometrics AND all:"large language models"
 - cat:cs.DL AND all:citation
 (cs.DL to kategoria Digital Libraries: bibliometria, naukometria, komunikacja naukowa).</code></pre></li>
-    <li><b>Adres.</b> <b>Method</b>: <code>GET</code>. <b>URL</b>:
+    <li><b>Adres.</b> W polu <b>Method</b> zostaw <code>GET</code> (czyli „pobierz dane”). W pole <b>URL</b> wklej:
 <pre><code>https://export.arxiv.org/api/query</code></pre></li>
-    <li><b>Parametry.</b> Włącz <b>Send Query Parameters</b> i dodaj trzy parametry (przycisk <b>Add Parameter</b>):
+    <li><b>Parametry.</b> Parametry mówią wyszukiwarce, czego szukać, ile wyników zwrócić i jak je ułożyć. Włącz <b>Send Query Parameters</b> i przyciskiem <b>Add Parameter</b> dodaj trzy parametry:
       <table>
-        <tr><th>Name</th><th>Value</th></tr>
-        <tr><td><code>search_query</code></td><td>wypełnia agent (krok 6)</td></tr>
-        <tr><td><code>max_results</code></td><td><code>5</code></td></tr>
-        <tr><td><code>sortBy</code></td><td><code>relevance</code></td></tr>
+        <tr><th>Name</th><th>Value</th><th>Co oznacza</th></tr>
+        <tr><td><code>search_query</code></td><td>wpisze agent (krok 6)</td><td>czego szukać</td></tr>
+        <tr><td><code>max_results</code></td><td><code>5</code></td><td>ile wyników zwrócić</td></tr>
+        <tr><td><code>sortBy</code></td><td><code>relevance</code></td><td>najtrafniejsze wyniki na początku</td></tr>
       </table></li>
-    <li><b>Pole wypełniane przez agenta.</b> Przy polu <b>Value</b> parametru <code>search_query</code> kliknij ikonę gwiazdek po prawej (<i>Let the model define this parameter</i>). Jeśli jej nie widzisz, wklej w pole wyrażenie:
+    <li><b>Pole, które wypełnia agent.</b> Treść wyszukiwania (<code>search_query</code>) za każdym razem będzie inna, więc nie wpisujesz jej sam. Ma ją ułożyć agent. Kliknij ikonę gwiazdek po prawej stronie pola <b>Value</b> (podpis <i>Let the model define this parameter</i>). Jeśli nie ma tej ikony, wklej w pole:
 <pre><code>{{ $fromAI('search_query', 'Zapytanie w składni arXiv, po angielsku', 'string') }}</code></pre>
-      Dzięki temu agent sam układa zapytanie do arXiv.
-      <figure><img src="img/17-http-wypelniony.png" alt="Wypełniony panel narzędzia arXiv" loading="lazy"><figcaption>Tak wygląda gotowe narzędzie. Ramki: opis narzędzia i ikona „niech model wypełni to pole”.</figcaption></figure></li>
-    <li>Zamknij panel i zapisz. Gotowy agent wygląda tak:
+      <figure><img src="img/17-http-wypelniony.png" alt="Wypełniony panel narzędzia arXiv" loading="lazy"><figcaption>Gotowe narzędzie. Ramki zaznaczają opis narzędzia i ikonę, która oddaje pole modelowi.</figcaption></figure></li>
+    <li>Zamknij panel i zapisz przepływ. Gotowy agent wygląda tak:
       <figure><img src="img/18-gotowy-agent.png" alt="Gotowy agent z modelem, pamięcią i narzędziem" loading="lazy"></figure></li>
-    <li><b>Test.</b> Otwórz czat i zadaj to samo pytanie o altmetrię. Teraz w odpowiedzi powinny być prawdziwe artykuły z linkami do arxiv.org.</li>
-    <li><b>Zajrzyj do środka.</b> W panelu <b>Logs</b> po prawej stronie czatu rozwiń kroki agenta. Zobaczysz, jakie zapytanie agent wysłał do arXiv, co dostał (surowy XML z abstraktami) i jak z tego zbudował odpowiedź. Kliknij też w węzeł narzędzia: w zakładce <b>From AI</b> widać wartość, którą wpisał model.</li>
+    <li><b>Test.</b> Otwórz czat i zadaj to samo pytanie o altmetrię co w rozdziale 6. Teraz odpowiedź powinna zawierać prawdziwe artykuły z linkami do arxiv.org.</li>
+    <li><b>Sprawdź, co zrobił agent.</b> W panelu <b>Logs</b> po prawej stronie czatu rozwiń kolejne kroki. Zobaczysz:
+      <ul>
+        <li>jakie zapytanie agent wysłał do arXiv,</li>
+        <li>co arXiv odesłał (surowe dane w formacie XML, razem z abstraktami),</li>
+        <li>jak agent zbudował z tego odpowiedź.</li>
+      </ul>
+      Kliknij też węzeł narzędzia. W zakładce <b>From AI</b> widać treść wyszukiwania, którą wpisał model.</li>
   </ol>
-  <div class="task"><b>Zadanie</b>Zadaj trzy różne pytania i zapisz, jakie zapytania do arXiv ułożył agent. Czy były trafne? Czy kiedykolwiek przetłumaczył polskie pojęcie źle?</div>
-  <div class="quiz" data-answer="c">
-    <p>Na podstawie czego model decyduje, czy i jak użyć narzędzia?</p>
-    <label><input type="radio" name="q2" value="a"> Na podstawie adresu URL narzędzia</label>
-    <label><input type="radio" name="q2" value="b"> Losowo</label>
-    <label><input type="radio" name="q2" value="c"> Na podstawie nazwy i opisu narzędzia (Description)</label>
-    <div class="fb"></div>
-  </div>
+  <div class="task"><b>Zadanie</b>Zadaj trzy różne pytania. Przy każdym zapisz, jakie zapytanie do arXiv ułożył agent. Czy pasowało do pytania? Czy agent dobrze przetłumaczył polskie pojęcia na angielski?</div>
 </section>
 
 <section id="s8" data-title="Instrukcja systemowa">
   <h2>8. Instrukcja systemowa</h2>
   <div class="meta">10 minut</div>
-  <p>Instrukcja systemowa to stałe polecenie, które agent dostaje przed każdą rozmową. Ustala jego rolę i zasady.</p>
+  <p>Instrukcja systemowa (<i>System Message</i>) to stały tekst, który agent dostaje przed każdą rozmową. Określa, kim agent ma być i jakich zasad ma przestrzegać. Osoba pisząca na czacie jej nie widzi.</p>
   <ol class="steps">
-    <li>Otwórz węzeł <b>AI Agent</b> (dwuklik), kliknij <b>Add Option</b> i wybierz <b>System Message</b>.
+    <li>Kliknij dwukrotnie węzeł <b>AI Agent</b>. Kliknij <b>Add Option</b> i wybierz <b>System Message</b>.
       <figure><img src="img/19-add-option.png" alt="Lista opcji agenta z System Message" loading="lazy"></figure></li>
-    <li>Zastąp domyślny tekst poniższym i zapisz przepływ.
+    <li>Usuń tekst, który jest w polu, i wklej poniższy. Zapisz przepływ.
 <pre><code>Jesteś asystentem przeglądu literatury naukowej.
 Zasady:
 1. Gdy użytkownik pyta o publikacje lub badania, zawsze najpierw użyj narzędzia szukaj_w_arxiv. Zapytania twórz po angielsku.
@@ -234,21 +246,22 @@ Zasady:
 5. Odpowiadaj po polsku, zwięźle.</code></pre>
       <figure><img src="img/20-system-message.png" alt="Pole System Message z wklejoną instrukcją" loading="lazy"></figure></li>
   </ol>
-  <div class="task"><b>Zadanie</b>Zadaj te same pytania co wcześniej i porównaj odpowiedzi. Potem usuń regułę 2 i sprawdź, czy agent zaczyna dopisywać artykuły „od siebie”. Przywróć regułę.</div>
+  <div class="task"><b>Zadanie</b>Zadaj te same pytania co w rozdziale 7 i porównaj odpowiedzi. Potem usuń z instrukcji regułę 2 i sprawdź, czy agent zaczyna podawać artykuły, których nie znalazł w arXiv. Na koniec przywróć regułę 2.</div>
 </section>
 
-<section id="s9" data-title="Ekstrakcja z abstraktów">
-  <h2>9. Ekstrakcja informacji z abstraktów</h2>
+<section id="s9" data-title="Informacje z abstraktów">
+  <h2>9. Wyciąganie informacji z abstraktów</h2>
   <div class="meta">15 minut</div>
-  <p>Zadanie przypomina rozpoznawanie encji (NER) i analizę sentymentu z poprzednich zajęć, ale tym razem wykonuje je model językowy na abstraktach pobranych z arXiv. Wypróbuj poniższe prompty na temacie swojej pracy licencjackiej: w miejsce <code>[TEMAT]</code> wpisz swój temat.</p>
-  <div class="tip"><b>Jeśli agent nic nie znajduje</b>arXiv obejmuje głównie nauki ścisłe i informatykę. Gdy temat jest bardzo wąski albo humanistyczny, opisz go ogólniej, np. „czytelnictwo młodzieży” zamiast „czytelnictwo młodzieży w bibliotekach Mazowsza”.</div>
+  <p>Agent może nie tylko znaleźć artykuły, ale też wypisać z abstraktów konkretne informacje: metodę, dane, wyniki. Na poprzednich zajęciach robiliście podobne rzeczy małymi modelami (rozpoznawanie nazw, czyli NER, i analiza sentymentu). Tutaj robi to model językowy.</p>
+  <p>Poniżej są gotowe polecenia. Skopiuj jedno, w miejsce <code>[TEMAT]</code> wpisz temat swojej pracy licencjackiej i wyślij agentowi.</p>
+  <div class="tip"><b>Jeśli agent nic nie znajduje</b>arXiv zawiera głównie prace z nauk ścisłych i informatyki. Jeśli Twój temat jest bardzo wąski albo humanistyczny, opisz go ogólniej, np. „czytelnictwo młodzieży” zamiast „czytelnictwo młodzieży w bibliotekach Mazowsza”.</div>
 
   <h3>Tabela przeglądu literatury</h3>
 <pre><code>Znajdź 5 artykułów na temat: [TEMAT].
 Dla każdego wypełnij tabelę w formacie markdown z kolumnami:
 Tytuł | Rok | Problem badawczy | Metoda | Dane / zbiór danych | Główny wynik | Nastawienie autorów (entuzjastyczne / neutralne / krytyczne) | Fragment abstraktu uzasadniający nastawienie
 Korzystaj wyłącznie z treści abstraktów. Jeśli jakiejś informacji nie ma w abstrakcie, wpisz „brak w abstrakcie”.</code></pre>
-  <p>Tabelę możesz skopiować do Excela lub Arkuszy Google.</p>
+  <p>Gotową tabelę możesz skopiować do Excela lub Arkuszy Google.</p>
 
   <h3>Różne zapytania do bazy</h3>
 <pre><code>Moja praca licencjacka dotyczy tematu: [TEMAT].
@@ -280,22 +293,29 @@ Podziel je na trzy grupy: autorzy oceniający zjawisko pozytywnie, neutralnie i 
 Przy każdym artykule podaj fragment abstraktu, na podstawie którego go przypisałeś.</code></pre>
 </section>
 
-<section id="s11" data-title="Plan B i problemy">
-  <h2>10. Plan B i typowe problemy</h2>
-  <div class="meta">gdy coś nie działa</div>
-  <h3>Gotowy agent do zaimportowania</h3>
-  <p>Pobierz plik <a href="agent-arxiv-n8n.json" download>agent-arxiv-n8n.json</a>. W n8n utwórz pusty przepływ, kliknij <b>…</b> obok nazwy przepływu, wybierz <b>Import</b>, a potem <b>From File</b>. Po imporcie otwórz węzeł modelu, wybierz swój klucz Gemini (Credential) i sprawdź, czy w polu Model jest <code>models/gemini-3.5-flash-lite</code>.</p>
+<section id="s11" data-title="Gdy coś nie działa">
+  <h2>10. Gdy coś nie działa</h2>
+  <div class="meta">zajrzyj tu w razie problemów</div>
+  <h3>Gotowy agent z pliku</h3>
+  <p>Jeśli nie udało Ci się zbudować agenta, możesz wczytać gotowego.</p>
+  <ol>
+    <li>Pobierz plik <a href="agent-arxiv-n8n.json" download>agent-arxiv-n8n.json</a>.</li>
+    <li>W n8n utwórz nowy, pusty przepływ.</li>
+    <li>Kliknij <b>…</b> obok nazwy przepływu u góry, wybierz <b>Import</b>, potem <b>From File</b> i wskaż pobrany plik.</li>
+    <li>Otwórz węzeł <b>Google Gemini Chat Model</b> i w polu <b>Credential</b> wybierz swój klucz.</li>
+    <li>Sprawdź, czy w polu <b>Model</b> jest <code>models/gemini-3.5-flash-lite</code>.</li>
+  </ol>
   <figure><img src="img/21-import.png" alt="Menu przepływu z opcją Import" loading="lazy"></figure>
-  <h3>Problemy i rozwiązania</h3>
+  <h3>Częste problemy</h3>
   <table>
-    <tr><th>Problem</th><th>Przyczyna</th><th>Co zrobić</th></tr>
-    <tr><td>Błąd 429 albo „Resource exhausted”</td><td>Wyczerpany darmowy limit Gemini</td><td>Odczekaj minutę; przełącz na Flash-Lite; użyj klucza z innego konta Google</td></tr>
-    <tr><td>Błąd 404 „This model … is no longer available to new users”</td><td>Wybrany model został wycofany</td><td>W węźle modelu wybierz model wskazany w komunikacie błędu, np. <code>models/gemini-3.5-flash-lite</code></td></tr>
-    <tr><td>Błąd uwierzytelnienia modelu</td><td>Źle wklejony klucz</td><td>Utwórz credential od nowa, sprawdź, czy klucz nie ma spacji na końcu</td></tr>
-    <tr><td>Agent nie używa narzędzia</td><td>Słaby opis narzędzia albo brak reguły w instrukcji</td><td>Doprecyzuj Description; dodaj regułę „zawsze użyj narzędzia”</td></tr>
-    <tr><td>arXiv zwraca błąd 503 albo nic</td><td>Za dużo zapytań z jednej sieci naraz</td><td>Odczekaj kilka sekund i powtórz</td></tr>
-    <tr><td>Dziwna lub ucięta odpowiedź</td><td>Za dużo tekstu z arXiv</td><td>Zmniejsz <code>max_results</code> do 3</td></tr>
-    <tr><td>Wygasł okres próbny n8n</td><td>14 dni od rejestracji</td><td>Załóż nowe konto i zaimportuj przepływ z pliku</td></tr>
+    <tr><th>Co widzisz</th><th>Dlaczego</th><th>Co zrobić</th></tr>
+    <tr><td>Błąd 429 albo „Resource exhausted”</td><td>Skończył się darmowy limit Gemini.</td><td>Odczekaj minutę i spróbuj ponownie. Jeśli to nie pomaga, wybierz model Flash-Lite albo utwórz klucz na innym koncie Google.</td></tr>
+    <tr><td>Błąd 404 „This model … is no longer available to new users”</td><td>Ten model nie jest już dostępny dla nowych kont.</td><td>W węźle modelu wybierz model podany w treści błędu, np. <code>models/gemini-3.5-flash-lite</code>.</td></tr>
+    <tr><td>Błąd klucza w węźle modelu</td><td>Klucz został źle wklejony.</td><td>Dodaj credential jeszcze raz. Sprawdź, czy na początku lub na końcu klucza nie ma spacji.</td></tr>
+    <tr><td>Agent nie korzysta z wyszukiwarki</td><td>Opis narzędzia jest za ogólny albo brakuje instrukcji systemowej.</td><td>Sprawdź pole Description (rozdział 7) i instrukcję systemową (rozdział 8).</td></tr>
+    <tr><td>arXiv zwraca błąd 503 albo nic</td><td>Za dużo osób z tej samej sieci szuka jednocześnie.</td><td>Odczekaj kilka sekund i spróbuj ponownie.</td></tr>
+    <tr><td>Odpowiedź jest urwana albo dziwna</td><td>arXiv odesłał za dużo tekstu.</td><td>W parametrze <code>max_results</code> zmień 5 na 3.</td></tr>
+    <tr><td>Skończył się okres próbny n8n</td><td>Minęło 14 dni od rejestracji.</td><td>Załóż nowe konto i wczytaj gotowego agenta z pliku (opis wyżej).</td></tr>
   </table>
 </section>
 
@@ -342,14 +362,6 @@ document.querySelectorAll("pre").forEach(p => {
   b.onclick = () => navigator.clipboard.writeText(p.querySelector("code").innerText)
     .then(() => { b.textContent = "Skopiowano"; setTimeout(() => b.textContent = "Kopiuj", 1500); });
   p.appendChild(b);
-});
-
-document.querySelectorAll(".quiz").forEach(q => {
-  q.addEventListener("change", e => {
-    const fb = q.querySelector(".fb"), ok = e.target.value === q.dataset.answer;
-    fb.textContent = ok ? "Dobrze!" : "Jeszcze raz.";
-    fb.className = "fb " + (ok ? "good" : "bad");
-  });
 });
 
 const lb = document.getElementById("lb");
